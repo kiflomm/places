@@ -1,19 +1,17 @@
-import { Stack, Link } from 'expo-router';
+import { WebView } from 'react-native-webview'; 
+import { StyleSheet } from 'react-native';
 
-import { Button } from '~/components/Button';
-import { Container } from '~/components/Container';
-import { ScreenContent } from '~/components/ScreenContent';
-
-export default function Home() {
+export default function App() {
   return (
-    <>
-      <Stack.Screen options={{ title: 'Home' }} />
-      <Container>
-        <ScreenContent path="app/index.tsx" title="Home"></ScreenContent>
-        <Link href={{ pathname: '/details', params: { name: 'Dan' } }} asChild>
-          <Button title="Show Details" />
-        </Link>
-      </Container>
-    </>
+    <WebView
+      style={styles.container}
+      source={{ uri: 'https://allplace.online/en/items-list/b0c6a535-1c11-4e15-9bc1-246fdb700216?mobile=true' }}
+    />
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+});
