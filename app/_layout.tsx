@@ -8,6 +8,12 @@ export default function Layout() {
           headerShown: false
         }} 
         />
+
+        <Stack.Screen name="place" options={{
+          title: 'places',
+          headerShown: false
+        }} 
+        />
     </Stack>
   )
 }
