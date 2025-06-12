@@ -39,9 +39,6 @@ const OfficeCard = ({ office, onPress }: { office: Office; onPress: () => void }
       </View>
       <View className="flex-row items-center justify-between">
         <Text className="text-gray-500 text-xs">Click to Manage</Text>
-        <View className={`px-2 py-1 rounded-full ${statusStyles[isInactive ? 'inactive' : 'active']}`}> 
-          <Text className="text-xs font-semibold capitalize">{office.status}</Text>
-        </View>
       </View>
     </TouchableOpacity>
   );
@@ -72,8 +69,10 @@ const Index = () => {
 
   return (
     <View className="flex-1 bg-gray-50 px-4 pt-8">
-      <Text className="text-2xl font-bold text-green-700 mb-1">Select an Office</Text>
-      <Text className="text-gray-500 mb-4">Choose an office to view its items</Text>
+      <View className="items-center">
+        <Text className="text-2xl font-bold text-green-700 mb-1">Select an Office</Text>
+        <Text className="text-gray-500 mb-4">Choose an office to view its items</Text>
+      </View>
       <TextInput
         className="bg-white border border-gray-200 rounded-lg px-4 py-2 mb-4 text-base"
         placeholder="Search offices..."
