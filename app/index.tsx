@@ -1,6 +1,7 @@
 import { View, Text, TextInput, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'expo-router'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const API_URL = 'https://allplace.online/api/offices';
 
@@ -52,6 +53,16 @@ const Index = () => {
   const router = useRouter();
 
   useEffect(() => {
+    (async () => {
+      const savedId = await AsyncStorage.getItem('selectedOfficeId');
+      if (savedId) {
+        router.replace({ pathname: '/place', params: { id: savedId } });
+        return;
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
     fetch(API_URL)
       .then(res => res.json())
       .then(data => {
@@ -88,7 +99,10 @@ const Index = () => {
           renderItem={({ item }) => (
             <OfficeCard
               office={item}
-              onPress={() => router.push({ pathname: '/place', params: { id: item.id } })}
+              onPress={async () => {
+                await AsyncStorage.setItem('selectedOfficeId', item.id);
+                router.push({ pathname: '/place', params: { id: item.id } });
+              }}
             />
           )}
           showsVerticalScrollIndicator={false}
