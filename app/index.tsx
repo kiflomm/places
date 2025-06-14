@@ -13,6 +13,7 @@ const Index = () => {
   const [filtered, setFiltered] = useState<Office[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [pushToken, setPushToken] = useState<string | undefined>();
   const router = useRouter();
 
   useEffect(() => {
@@ -20,7 +21,7 @@ const Index = () => {
     registerForPushNotificationsAsync()
       .then(token => {
         if (token) {
-          // Optionally send token to backend here
+          setPushToken(token);
           console.log('Expo Push Token:', token);
         }
       })
@@ -78,6 +79,18 @@ const Index = () => {
               office={item}
               onPress={async () => {
                 await AsyncStorage.setItem('selectedOfficeId', item.id);
+                if (pushToken) {
+                  try {
+                    await fetch('https://staff.tugza.tech/api/notifications', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ officeId: item.id, pushToken }),
+                    });
+                    console.log('Push token registered');
+                  } catch (err) {
+                    console.error('Failed to register push token:', err);
+                  }
+                }
                 router.push({ pathname: '/place', params: { id: item.id } });
               }}
             />
