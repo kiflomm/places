@@ -1,12 +1,23 @@
-import { View, Text, TextInput, FlatList, ActivityIndicator } from 'react-native'
+import { View, Text, TextInput, FlatList, ActivityIndicator, Alert } from 'react-native'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Office } from '~/services/types'
 import OfficeCard from '~/components/OfficeCard'
-import { registerForPushNotificationsAsync } from '~/services/notifications';
+import { registerForPushNotificationsAsync } from '~/services/notifications'
+import * as Notifications from 'expo-notifications'
 
 const API_URL = 'https://allplace.online/api/offices';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 const Index = () => {
   const [offices, setOffices] = useState<Office[]>([]);
@@ -56,6 +67,39 @@ const Index = () => {
     else setFiltered(offices.filter((o: Office) => o.name.toLowerCase().includes(search.toLowerCase())));
   }, [search, offices]);
 
+  // Define the office selection handler outside the JSX
+  const handleOfficePress = (item: Office) => {
+    Alert.alert(
+      'Confirm Office',
+      `Are you sure you want to select "${item.name}"?`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: async () => {
+            await AsyncStorage.setItem('selectedOfficeId', item.id);
+            if (pushToken) {
+              try {
+                await fetch('https://staff.tugza.tech/api/notifications', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ officeId: item.id, pushToken }),
+                });
+                console.log('Push token registered');
+              } catch (err) {
+                console.error('Failed to register push token:', err);
+              }
+            }
+            router.push({ pathname: '/place', params: { id: item.id } });
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <View className="flex-1 bg-gray-50 px-4 pt-8">
       <View className="items-center">
@@ -77,22 +121,7 @@ const Index = () => {
           renderItem={({ item }) => (
             <OfficeCard
               office={item}
-              onPress={async () => {
-                await AsyncStorage.setItem('selectedOfficeId', item.id);
-                if (pushToken) {
-                  try {
-                    await fetch('https://staff.tugza.tech/api/notifications', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ officeId: item.id, pushToken }),
-                    });
-                    console.log('Push token registered');
-                  } catch (err) {
-                    console.error('Failed to register push token:', err);
-                  }
-                }
-                router.push({ pathname: '/place', params: { id: item.id } });
-              }}
+              onPress={() => handleOfficePress(item)}
             />
           )}
           showsVerticalScrollIndicator={false}

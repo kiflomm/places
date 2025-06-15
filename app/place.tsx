@@ -1,9 +1,16 @@
 import { WebView } from 'react-native-webview'; 
-import { StyleSheet } from 'react-native';
+import { StyleSheet, BackHandler } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
+import { useEffect } from 'react';
 
 export default function Place() {
   const { id } = useLocalSearchParams();
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true);
+    return () => backHandler.remove();
+  }, []);
+
   return (
     <WebView
       style={styles.container}
