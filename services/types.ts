@@ -9,4 +9,5 @@ export type Office = {
     type: OfficeType;
     status: string;
     isActive: boolean;
+    cityId: string;
 };

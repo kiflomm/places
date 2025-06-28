@@ -1,3 +1,4 @@
+import React from 'react';
 import { TouchableOpacity, View, Text } from "react-native";
 import { Office } from "~/services/types";
 
@@ -28,4 +29,4 @@ const OfficeCard = ({ office, onPress }: { office: Office; onPress: () => void }
     );
   };
 
-export default OfficeCard
+export default React.memo(OfficeCard);
