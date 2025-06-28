@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "smartg2g-orders",
-    "slug": "places",
+    "name": "smartg2g-requests",
+    "slug": "smartg2g-requests",
     "version": "1.0.0",
-    "scheme": "places",
+    "scheme": "smartg2g-requests",
     "web": {
       "bundler": "metro",
       "output": "static",
@@ -41,15 +41,14 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.tugzapp.places",
+      "package": "com.tugzapp.g2grequests",
       "googleServicesFile": "./google-services.json"
     },
     "extra": {
-      "router": {},
       "eas": {
-        "projectId": "81000c2e-8050-4484-910f-c153ce1a1ffc"
+        "projectId": "6627566c-6f28-4904-bfee-de0168c71ae4"
       }
     },
-    "owner": "placesnotify"
+    "owner": "requestsnotify"
   }
 }

@@ -114,7 +114,7 @@ const Index = () => {
             await AsyncStorage.setItem('selectedOfficeId', item.id);
             if (pushToken) {
               try {
-                await fetch('https://staff.tugza.tech/api/notifications', {
+                await fetch('https://staff.tugza.tech/api/requests/', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({ officeId: item.id, pushToken }),
